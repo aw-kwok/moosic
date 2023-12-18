@@ -31,3 +31,9 @@
 - dotenv v16.3.1
 - play-dl v1.9.7
 - prism-media v1.3.5
+
+## To-Do List
+- Add functionality for pause, resume, info, shuffle, skip, and skipto
+- Improve imbeds
+- Combine play subfunctions
+- Add and test Spotify playlists and tracks
