@@ -15,9 +15,8 @@ module.exports = {
             //      1. the 'cache' property is a 'Collection<string, GuildQueue<unknown>>'
             //      2. the 'get(node)' method, where 'node' is of type 'NodeResolvable' which is either a 'GuildQueue' or 'GuildResolvable'
             const queue = client.player.nodes.get(interaction.guildId)
-            
-            // TODO: i will fix this later,
-            if (!queue || !queue.isPlaying()) {
+
+            if (!queue || queue.isEmpty()) {
                 return await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()

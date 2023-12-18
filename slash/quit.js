@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
+const { EmbedBuilder } = require("discord.js")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,6 +13,11 @@ module.exports = {
         }
 
         queue.delete()
-        await interaction.editReply("Bye!")
+        await interaction.editReply({
+            embeds: [
+                new EmbedBuilder()
+                    .setDescription("Thank you for using moosic!")
+            ]
+        })
     },
 }

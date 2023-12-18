@@ -5,69 +5,124 @@ const { QueryType } = require("discord-player")
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("play")
-        .setDescription("loads songs from youtube")
-        .addSubcommand((subcommand) =>
-            subcommand
-                .setName("song")
-                .setDescription("Loads a single song from a url")
-                .addStringOption((option) => option.setName("url").setDescription("the song's url").setRequired(true))
-        )
-        .addSubcommand((subcommand) =>
-            subcommand
-                .setName("playlist")
-                .setDescription("Loads a playlist from youtube")
-                .addStringOption((option) => option.setName("url").setDescription("the playlist's url").setRequired(true))
-        )
-        .addSubcommand((subcommand) =>
-            subcommand
-                .setName("search")
-                .setDescription("Searches for song based on provided keywords")
-                .addStringOption((option) => option.setName("searchterms").setDescription("the search keywords").setRequired(true))
-        ),
+        .setDescription("Loads a song or playlist from YouTube or Spotify")
+        .addStringOption((option) => option.setName("input").setDescription("A search term or link").setRequired(true)),
+
         run: async({ client, interaction }) => {
+            let embed = new EmbedBuilder()
             if (!interaction.member.voice.channel) {
-                return interaction.editReply("You need to be in a voice channel to use this command")
+                return interaction.editReply({
+                    embeds: [
+                        embed.setDescription("You need to be in a voice channel to use this command")
+                    ]
+                })
             }
             const queue = await client.player.nodes.create(interaction.guild)
             if (!queue.connection) await queue.connect(interaction.member.voice.channel)
-
-            let embed = new EmbedBuilder()
+            
             await client.player.extractors.loadDefault()
 
-            if (interaction.options.getSubcommand() === "song") {
-                let url = interaction.options.getString("url")
-                const result = await client.player.search(url, {
-                    requestedBy: interaction.user,
-                    searchEngine: QueryType.YOUTUBE_VIDEO
-                })
-                if (result.tracks.length === 0) {
-                    return interaction.editReply("No results")
-                }
-                const song = result.tracks[0]
-                await queue.addTrack(song)
-                embed
-                    .setDescription(`**[${song.title}][${song.url}]** has been added to the Queue`)
-                    .setThumbnail(song.thumbnail)
-                    .setFooter({ text: `Duration: ${song.duration}`})
+            const input = interaction.options.getString("input")
+
+            const isValidUrl = input => {
+                var urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
+                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
+                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
+                '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
+                '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
+                return !!urlPattern.test(input);
             }
-            else if (interaction.options.getSubcommand() === "playlist") {
-                let url = interaction.options.getString("url")
-                const result = await client.player.search(url, {
-                    requestedBy: interaction.user,
-                    searchEngine: QueryType.YOUTUBE_PLAYLIST
-                })
-                if (result.tracks.length === 0) {
-                    return interaction.editReply("No results")
+
+            if (isValidUrl && (input.includes("youtube") || input.includes("youtu.be"))) { // handle YouTube links
+                if (!input.includes("playlist")) {
+                    const result = await client.player.search(input, {
+                        requestedBy: interaction.user,
+                        searchEngine: QueryType.YOUTUBE_VIDEO
+                    })
+
+                    if (result.tracks.length === 0) {
+                        return await interaction.editReply({
+                            embeds: [
+                                embed.setDescription("No results found")
+                            ]
+                        })
+                    }
+
+                    const song = result.tracks[0]
+                    await queue.addTrack(song)
+                    embed
+                        .setDescription(`**[${song.title}](${song.url})** has been added to the queue`)
+                        .setThumbnail(song.thumbnail)
+                        .setFooter({ text: `Duration: ${song.duration}`})
                 }
-                const playlist = result.playlist
-                await queue.addTrack(playlist)
-                embed
-                    .setDescription(`**${result.tracks.length} songs from [${playlist.title}][${playlist.url}]** have been added to the Queue`)
-                    .setThumbnail(playlist.thumbnail)
+                else {
+                    const result = await client.player.search(input, {
+                        requestedBy: interaction.user,
+                        searchEngine: QueryType.YOUTUBE_PLAYLIST
+                    })
+                    if (result.tracks.length === 0) {
+                        return interaction.editReply("No results")
+                    }
+                    const playlist = result.playlist
+                    await queue.addTrack(playlist)
+                    embed
+                        .setDescription(`**${result.tracks.length} songs from [${playlist.title}](${playlist.url})** have been added to the queue`)
+                        .setThumbnail(playlist.thumbnail)
+                }
             }
-            else if (interaction.options.getSubcommand() === "search") {
-                let url = interaction.options.getString("searchterms")
-                const result = await client.player.search(url, {
+            else if (isValidUrl && input.includes("spotify")) { //handle spotify links
+                if (input.includes("track")) {
+                    const result = await client.player.search(input, {
+                        requestedBy: interaction.user,
+                        searchEngine: QueryType.SPOTIFY_SONG
+                    })
+
+                    if (result.tracks.length === 0) {
+                        return await interaction.editReply({
+                            embeds: [
+                                embed.setDescription("No results found")
+                            ]
+                        })
+                    }
+                    const song = result.tracks[0]
+                    await queue.addTrack(song)
+                    embed
+                        .setDescription(`**[${song.title}](${song.url})** has been added to the queue`)
+                        .setThumbnail(song.thumbnail)
+                        .setFooter({ text: `Duration: ${song.duration}`})
+                }
+                else if (input.includes("playlist")) {
+                    const result = await client.player.search(input, {
+                        requestedBy: interaction.user,
+                        searchEngine: QueryType.SPOTIFY_PLAYLIST
+                    })
+                    if (result.tracks.length === 0) {
+                        return interaction.editReply("No results")
+                    }
+                    const playlist = result.playlist
+                    await queue.addTrack(playlist)
+                    embed
+                        .setDescription(`**${result.tracks.length} songs from [${playlist.title}](${playlist.url})** have been added to the queue`)
+                        .setThumbnail(playlist.thumbnail)
+                }
+                else if (input.includes("album")) {
+                    const result = await client.player.search(input, {
+                        requestedBy: interaction.user,
+                        searchEngine: QueryType.SPOTIFY_ALBUM
+                    })
+                    if (result.tracks.length === 0) {
+                        return interaction.editReply("No results")
+                    }
+                    const playlist = result.playlist
+                    await queue.addTrack(playlist)
+                    embed
+                        .setDescription(`**${result.tracks.length} songs from [${playlist.title}](${playlist.url})** have been added to the queue`)
+                        .setThumbnail(playlist.thumbnail)
+                }
+            }
+            else { // search
+                const result = await client.player.search(input, {
                     requestedBy: interaction.user,
                     searchEngine: QueryType.AUTO
                 })
@@ -75,10 +130,9 @@ module.exports = {
                     return interaction.editReply("No results")
                 }
                 const song = result.tracks[0]
-                console.log(song)
                 await queue.addTrack(song)
                 embed
-                    .setDescription(`**[${song.title}][${song.url}]** has been added to the Queue`)
+                    .setDescription(`**[${song.title}](${song.url})** has been added to the queue`)
                     .setThumbnail(song.thumbnail)
                     .setFooter({ text: `Duration: ${song.duration}`})
             }
