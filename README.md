@@ -4,7 +4,7 @@
 ![Node.js Badge](https://img.shields.io/badge/Node.js-10.20%2B-white?style=for-the-badge&logo=nodedotjs&logoColor=%23ffffff&labelColor=%23141414&color=%23339933)
 
 ## 🥛 Overview
-moosic leverages the power of Discord.js to stream music from various sources, such as YouTube, to be played in a Discord voice channel. moosic offers users the ability to play, disconnect the bot, and view the queue. Developed by Andrew Kwok
+moosic leverages the power of Discord.js to stream music from various sources, such as YouTube, to be played in a Discord voice channel. moosic offers users the ability to play, disconnect the bot, and view the queue. Developed by Andrew Kwok.
 
 ## ✨ Features
 - `/play` - Play a song or playlist from a link, or search for a song all with one command!
