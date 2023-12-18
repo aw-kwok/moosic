@@ -38,6 +38,6 @@ moosic leverages the power of Discord.js to stream music from various sources, s
 
 ## 📝 To-Do List
 - Add functionality for pause, resume, info, shuffle, skip, and skipto
-- Improve imbeds
+- Improve embeds
 - Combine play subfunctions
 - Add and test Spotify playlists and tracks
