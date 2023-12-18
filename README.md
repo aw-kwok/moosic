@@ -13,8 +13,8 @@ moosic leverages the power of Discord.js to stream music from various sources, s
 
 ## ⚙️ Running the Project
 1. Clone the project locally
-2. Install Node.js and npm
-3. In terminal, run `npm install` in the directory of the project
+2. Install Node.js (https://nodejs.org/en/download)
+3. In terminal, run `npm install` in the directory of the project to install Node Package Manager; should be version 10.2.3
 4. Create an application on the Discord developer portal
 5. Go to your application's settings
 6. Under `Bot`, copy `token`
