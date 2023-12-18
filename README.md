@@ -1,13 +1,17 @@
-# moosic
-## Overview
-*moosic* leverages the power of *Discord.js* to stream music from various sources, such as YouTube, to be played in a Discord voice channel. *moosic* offers users the ability to play, pause, and view the queue.
+<img align ="right" src ="./logo.png" width="150"/>
 
-## Features
+# moosic
+![Node.js Badge](https://img.shields.io/badge/Node.js-10.20%2B-white?style=for-the-badge&logo=nodedotjs&logoColor=%23ffffff&labelColor=%23141414&color=%23339933)
+
+## 🥛 Overview
+moosic leverages the power of Discord.js to stream music from various sources, such as YouTube, to be played in a Discord voice channel. moosic offers users the ability to play, pause, and view the queue.
+
+## ✨ Features
 - `/play` - Play a song or playlist from a link, or search for a song all with one command!
 - `/queue` - View the song currently playing, as well as the queue of songs.
 - `/quit` - When you're done listening, stop playing and have the bot leave the voice channel.
 
-## Running the Project
+## ⚙️ Running the Project
 1. Clone the project locally
 2. Install Node.js and npm
 3. In terminal, run `npm install` in the directory of the project
@@ -20,7 +24,7 @@
 10. Run `node index.js load` in terminal to load slash commands
 11. To run the bot, run `node index.js` in terminal
 
-## Dependencies
+## 📘 Dependencies
 - @discord-player/extractor v4.4.5
 - @discordjs/builders v1.7.0
 - @discordjs/opus v0.9.0
@@ -32,7 +36,7 @@
 - play-dl v1.9.7
 - prism-media v1.3.5
 
-## To-Do List
+## 📝 To-Do List
 - Add functionality for pause, resume, info, shuffle, skip, and skipto
 - Improve imbeds
 - Combine play subfunctions
