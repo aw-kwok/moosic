@@ -5,6 +5,7 @@ const { Routes } = require("discord-api-types/v9")
 const fs = require("fs")
 const { Player } = require("discord-player")
 const { GatewayIntentBits } = require("discord.js")
+const { EmbedBuilder } = require("discord.js")
 
 dotenv.config()
 const TOKEN = process.env.TOKEN
@@ -58,6 +59,11 @@ else {
     client.on("ready", () => {
         console.log(`Logged in as ${client.user.tag}`)
     })
+
+    let followUp
+    let prevInteraction
+    let embed = new EmbedBuilder().setDescription(`Loading...`)// on start, create a player embed
+
     client.on("interactionCreate", (interaction) => {
         async function handleCommand() {
             if (!interaction.isCommand()) return
@@ -67,8 +73,52 @@ else {
 
             await interaction.deferReply()
             await slashcmd.run({ client, interaction })
+
+            prevInteraction = interaction
+            followUp?.then(msg =>{
+                msg.delete()
+                followUp = undefined
+            })
         }
         handleCommand()
     })
+    client.player.events.on("playerStart", (queue, track) => {
+        async function handlePlayerStart() {
+            if (prevInteraction) {
+                // delete previous now playing embed
+                followUp?.then(msg =>{
+                    msg.delete()
+                })
+                embed
+                    .setThumbnail(track.thumbnail)
+                    .setTitle("Now Playing")
+                    .setDescription(`**[${track.title}](${track.url})**`)
+                followUp = prevInteraction.followUp({
+                    embeds: [embed]
+                })
+            }
+            else {
+                setTimeout(handlePlayerStart, 250)
+            }
+        }
+        handlePlayerStart()
+    })
+    client.player.events.on("playerError", (queue, error) => {
+        async function handlePlayerError() {
+            if (prevInteraction) {
+                prevInteraction.channel.send({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription("There was an error playing the track, skipping to next track")
+                    ]
+                })
+            }
+            else {
+                setTimeout(handlePlayerError, 250)
+            }
+        }
+        handlePlayerError()
+    })
+    
     client.login(TOKEN)
 }

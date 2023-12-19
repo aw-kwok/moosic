@@ -3,8 +3,8 @@ const { EmbedBuilder } = require("discord.js")
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("info")
-        .setDescription("Displays info about the currently playing song"),
+        .setName("stop")
+        .setDescription("Stops the bot, clears the queue, and leaves the voice channel"),
     run: async ({ client, interaction }) => {
         const queue = client.player.nodes.get(interaction.guildId)
 
@@ -12,18 +12,12 @@ module.exports = {
             return await interaction.editReply("There are no songs in the queue")
         }
 
-        let bar = queue.node.createProgressBar({
-            queue: false,
-            length: 19
-        })
-
-        const song = queue.currentTrack
-
+        queue.delete()
         await interaction.editReply({
-            embeds: [new EmbedBuilder()
-            .setThumbnail(song.thumbnail)
-            .setDescription(`**Currently Playing [${song.title}](${song.url})**\n\n` + bar)
-        ],
+            embeds: [
+                new EmbedBuilder()
+                    .setDescription("Thank you for using moosic!")
+            ]
         })
     },
 }
