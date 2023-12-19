@@ -9,7 +9,13 @@ moosic leverages the power of Discord.js to stream music from various sources, s
 ## ✨ Features
 - `/play` - Play a song or playlist from a link, or search for a song all with one command!
 - `/queue` - View the song currently playing, as well as the queue of songs.
-- `/quit` - When you're done listening, stop playing and have the bot leave the voice channel.
+- `/stop` - When you're done listening, stop playing and have the bot leave the voice channel.
+- `/pause` - Pause the currently playing song.
+- `/resume` - Resume the current song from where you left off.
+- `/shuffle` - Shuffle songs in the queue.
+- `/skip` - Skip current song.
+- `/skipto` Skip to a specified song in the queue.
+- `/remove` Remove a specified song from the queue.
 
 ## ⚙️ Running the Project
 1. Clone the project locally
@@ -37,7 +43,5 @@ moosic leverages the power of Discord.js to stream music from various sources, s
 - prism-media v1.3.5
 
 ## 📝 To-Do List
-- Add functionality for pause, resume, info, shuffle, skip, and skipto
 - Improve embeds
-- Combine play subfunctions
-- Add and test Spotify playlists and tracks
+- Add functionality to move songs in queue
