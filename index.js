@@ -7,10 +7,12 @@ const { Player } = require("discord-player")
 const { GatewayIntentBits } = require("discord.js")
 const { EmbedBuilder } = require("discord.js")
 
+const debug = false
+
 dotenv.config()
 const TOKEN = process.env.TOKEN
 
-const LOAD_SLASH = process.argv[2] == "load"
+const LOAD_SLASH = process.argv[2] == "load" // to load slashcommands `node index.js load`
 
 const CLIENT_ID = "1186078850136940654"
 const GUILD_ID = "711036166257770517"
@@ -33,6 +35,7 @@ client.player = new Player(client, {
 
 let commands = []
 
+//loading slash commands by looking through slash directory for .js files, loads to commands array
 const slashFiles = fs.readdirSync("./slash").filter(file => file.endsWith(".js"))
 for (const file of slashFiles) {
     const slashcmd = require(`./slash/${file}`)
@@ -40,6 +43,7 @@ for (const file of slashFiles) {
     if (LOAD_SLASH) commands.push(slashcmd.data.toJSON())
 }
 
+// if user `node index.js load`
 if (LOAD_SLASH) {
     const rest = new REST({ version: "9"}).setToken(TOKEN)
     console.log("Deploying slash commands")
@@ -60,42 +64,48 @@ else {
         console.log(`Logged in as ${client.user.tag}`)
     })
 
+    // define variables to be used with multiple listeners
     let followUp
     let prevInteraction
-    let embed = new EmbedBuilder().setDescription(`Loading...`)// on start, create a player embed
+    let embed = new EmbedBuilder()// on start, create a player embed
 
+    // listens for when a user creates an interaction
     client.on("interactionCreate", (interaction) => {
+        if (debug) console.log("interactionCreate detected from Discord")
         async function handleCommand() {
             if (!interaction.isCommand()) return
 
             const slashcmd = client.slashcommands.get(interaction.commandName)
-            if (!slashcmd) interaction.reply("Not a valid slash command")
+            if (!slashcmd) interaction.reply({ embeds: new EmbedBuilder().setDescription("Not a valid slash command") })
 
             await interaction.deferReply()
-            await slashcmd.run({ client, interaction })
+            await slashcmd.run({ client, interaction }) // run slash command
 
             prevInteraction = interaction
-            followUp?.then(msg =>{
-                msg.delete()
-                followUp = undefined
-            })
+            if (debug) console.log(`prevInteraction set to /${interaction.commandName}`)
         }
         handleCommand()
     })
+    // listens for when the player starts playing, on instance of a new track
     client.player.events.on("playerStart", (queue, track) => {
+        if (debug) console.log(`playerStart detected`)
         async function handlePlayerStart() {
+            // wait until prevInteraction is defined by handleCommand()
             if (prevInteraction) {
                 // delete previous now playing embed
                 followUp?.then(msg =>{
                     msg.delete()
+                    if (debug) console.log(`followUp for /${prevInteraction.commandName} deleted`)
                 })
                 embed
                     .setThumbnail(track.thumbnail)
                     .setTitle("Now Playing")
                     .setDescription(`**[${track.title}](${track.url})**`)
+                // create followUp with now playing information
                 followUp = prevInteraction.followUp({
                     embeds: [embed]
                 })
+                if (debug) console.log(`new followUp created`)
             }
             else {
                 setTimeout(handlePlayerStart, 250)
@@ -103,9 +113,14 @@ else {
         }
         handlePlayerStart()
     })
-    client.player.events.on("playerError", (queue, error) => {
+    // error handling (for example, YouTube age-restricted videos)
+    client.player.events.on("playerError", (queue, error, track) => {
+        if (debug) console.log(`playerError detected`)
+        console.log(error.message)
+
         async function handlePlayerError() {
             if (prevInteraction) {
+                // send error message to channel of last interaction
                 prevInteraction.channel.send({
                     embeds: [
                         new EmbedBuilder()
@@ -119,6 +134,9 @@ else {
         }
         handlePlayerError()
     })
+
+    // error handling
+    process.on("error", (error) => console.log(error.message))
     
     client.login(TOKEN)
 }
