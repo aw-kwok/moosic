@@ -2,6 +2,9 @@
 
 # moosic
 ![Node.js Badge](https://img.shields.io/badge/Node.js-10.20%2B-white?style=for-the-badge&logo=nodedotjs&logoColor=%23ffffff&labelColor=%23141414&color=%23339933)
+![Discord.js Badge](https://img.shields.io/badge/discord.js-14.14.1-blue?style=for-the-badge&logo=discord&logoColor=white&labelColor=%23141414&color=%235865F2)
+![npm package Badge](https://img.shields.io/badge/npm%20package-10.2.3-red?style=for-the-badge&logo=npm&logoColor=white&labelColor=%23141414&color=%23CB3837)
+![MIT License Badge](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&labelColor=%23141414)
 
 ## 🥛 Overview
 moosic leverages the power of Discord.js to stream music from various sources, such as YouTube, to be played in a Discord voice channel. moosic offers users the ability to play, disconnect the bot, and view the queue. Developed by Andrew Kwok.
@@ -16,6 +19,10 @@ moosic leverages the power of Discord.js to stream music from various sources, s
 - `/skip` - Skip current song.
 - `/skipto` Skip to a specified song in the queue.
 - `/remove` Remove a specified song from the queue.
+- `/info` Display info about a specified song from the queue.
+- `/np` - Display info about the currently playing song.
+- `/insert` Insert a song or playlist at a specified position in the queue.
+- `/move` Move a song at a specified queue position to a new position in the queue.
 
 ## ⚙️ Running the Project
 1. Clone the project locally
