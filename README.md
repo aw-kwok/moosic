@@ -39,8 +39,8 @@ moosic leverages the power of Discord.js to stream music from various sources, s
 - discord-player v6.6.6
 - discord.js v14.14.1
 - dotenv v16.3.1
-- play-dl v1.9.7
 - prism-media v1.3.5
+- youtube-ext v1.1.16
 
 ## 📝 To-Do List
 - Improve embeds
