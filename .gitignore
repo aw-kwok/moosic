@@ -1,2 +1,4 @@
 .env
 token.txt
+**/.vscode
+test.js

@@ -6,6 +6,7 @@ const fs = require("fs")
 const { Player } = require("discord-player")
 const { GatewayIntentBits } = require("discord.js")
 const { EmbedBuilder } = require("discord.js")
+const net = require("node:net")
 
 const debug = false
 
@@ -134,9 +135,42 @@ else {
         }
         handlePlayerError()
     })
+    client.player.events.on("error", (queue, error, track) => {
+        if (debug) console.log(`error detected`)
+        console.log(error.message)
+
+        async function handleError() {
+            if (prevInteraction) {
+                // send error message to channel of last interaction
+                prevInteraction.channel.send({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setDescription("There was an error playing the track, skipping to next track")
+                    ]
+                })
+            }
+            else {
+                setTimeout(handleError, 250)
+            }
+        }
+        handleError()
+    })
+
 
     // error handling
-    process.on("error", (error) => console.log(error.message))
-    
+    process.on("error", (error) => {
+        console.error(error.message)
+    })
+    process.on("uncaughtException", (err) => {
+        console.error(err.message)
+        if (prevInteraction) {
+            prevInteraction.channel.send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setDescription("There was an error playing the track, skipping to next track")
+                ]
+            })
+        }
+    })
     client.login(TOKEN)
 }
