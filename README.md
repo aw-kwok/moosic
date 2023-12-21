@@ -2,6 +2,7 @@
 
 # moosic
 ![Node.js Badge](https://img.shields.io/badge/Node.js-10.20%2B-white?style=for-the-badge&logo=nodedotjs&logoColor=%23ffffff&labelColor=%23141414&color=%23339933)
+![MySQL Server Badge](https://img.shields.io/badge/MYSql%20server-8.0.35-blue?style=for-the-badge&logo=mysql&logoColor=white&labelColor=%23141414&color=%234479A1)
 ![Discord.js Badge](https://img.shields.io/badge/discord.js-14.14.1-blue?style=for-the-badge&logo=discord&logoColor=white&labelColor=%23141414&color=%235865F2)
 ![npm package Badge](https://img.shields.io/badge/npm%20package-10.2.3-red?style=for-the-badge&logo=npm&logoColor=white&labelColor=%23141414&color=%23CB3837)
 ![MIT License Badge](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&labelColor=%23141414)
