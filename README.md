@@ -56,7 +56,7 @@ moosic leverages the power of Discord.js to stream music from various sources, s
 1. Download [MySQL server](https://dev.mysql.com/downloads/installer/)
 2. Create a MySQL database where you want to store your queues
 3. Update .env with `DATABASE_NAME`, `DATABASE_USERNAME`, `DATABASE_PASSWORD`, and `DATABASE_HOST`
-4. Run `node queue.model.js ` to test database connectivity
+4. Run `node queue.model.js` to test database connectivity
 
 ## 📘 Dependencies
 - @discord-player/extractor 4.4.5
