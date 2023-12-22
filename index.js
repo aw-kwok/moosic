@@ -6,7 +6,7 @@ const fs = require("fs")
 const { Player } = require("discord-player")
 const { GatewayIntentBits } = require("discord.js")
 const { EmbedBuilder } = require("discord.js")
-const net = require("node:net")
+const { loadQueue } = require("./queue.model")
 
 const debug = false
 
@@ -68,7 +68,6 @@ else {
     // define variables to be used with multiple listeners
     let followUp
     let prevInteraction
-    let embed = new EmbedBuilder()// on start, create a player embed
 
     // listens for when a user creates an interaction
     client.on("interactionCreate", (interaction) => {
@@ -98,13 +97,14 @@ else {
                     msg.delete()
                     if (debug) console.log(`followUp for /${prevInteraction.commandName} deleted`)
                 })
-                embed
-                    .setThumbnail(track.thumbnail)
-                    .setTitle("Now Playing")
-                    .setDescription(`**[${track.title}](${track.url})**`)
                 // create followUp with now playing information
                 followUp = prevInteraction.followUp({
-                    embeds: [embed]
+                    embeds: [
+                        new EmbedBuilder()
+                            .setThumbnail(track.thumbnail)
+                            .setTitle("Now Playing")
+                            .setDescription(`**[${track.title}](${track.url})**`)
+                    ]
                 })
                 if (debug) console.log(`new followUp created`)
             }

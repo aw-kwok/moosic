@@ -22,12 +22,6 @@ const sequelize = new Sequelize(
     }
 )
 
-sequelize.authenticate().then(() => {
-    console.log("Connection has been established successfully.")
-}).catch((error) => {
-    console.error("Unable to connect to the database: ", error)
-})
-
 // creates Queue model for queues table with primary key String name and JSON queue variables
 const Queue = sequelize.define("queues", {
     name: {
@@ -36,6 +30,9 @@ const Queue = sequelize.define("queues", {
         primaryKey: true,
         get() {
             return this.getDataValue("name")
+        },
+        set(value) {
+            this.setDataValue("name", value)
         }
     },
     queue: {
@@ -43,6 +40,9 @@ const Queue = sequelize.define("queues", {
         allowNull: false,
         get() {
             return this.getDataValue("queue")
+        },
+        set(value) {
+            this.setDataValue("queue", value)
         }
     },
     thumbnail: {
@@ -50,13 +50,34 @@ const Queue = sequelize.define("queues", {
         allowNull: false,
         get() {
             return this.getDataValue("thumbnail")
+        },
+        set(value) {
+            this.setDataValue("thumbnail", value)
         }
     }
 })
 
-// add Queue model to database
-sequelize.sync().then(() => {
-    console.log("Queue table created successfully.")
-}).catch((error) => {
-    console.error("Unable to create table: ", error)
-})
+// creates db connection and authenticates
+async function loadQueue() {
+    await sequelize.authenticate().then(() => {
+        console.log("Connection has been established successfully.")
+    }).catch((error) => {
+        return console.error("Unable to connect to the database: ", error)
+    })
+
+    // add Queue model to database
+    sequelize.sync().then(() => {
+        console.log("Queue table created successfully.")
+    }).catch((error) => {
+        return console.error("Unable to create table: ", error)
+    })
+}
+loadQueue()
+
+
+
+
+module.exports = {
+    Queue,
+    DatabaseInstance: sequelize,
+}

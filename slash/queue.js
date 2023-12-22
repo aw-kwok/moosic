@@ -8,12 +8,6 @@ module.exports = {
         .addNumberOption((option) => option.setName("page").setDescription("Page number of the queue").setMinValue(1)),
 
         run: async ({ client, interaction }) => {
-            //I used the guildQueue to get the guildQueue
-            //console.log(client.player.nodes)//.get(interaction.guildId))
-            // client.player.nodes is a GuildNodeManager
-            // for queue to be of type GuildQueue, there are two ways to get a GuildQueue from a GuildNodeManager:
-            //      1. the 'cache' property is a 'Collection<string, GuildQueue<unknown>>'
-            //      2. the 'get(node)' method, where 'node' is of type 'NodeResolvable' which is either a 'GuildQueue' or 'GuildResolvable'
             const queue = client.player.nodes.get(interaction.guildId)
 
             if (!queue || queue.isEmpty()) {
