@@ -3,12 +3,11 @@
 # moosic
 ![Node.js Badge](https://img.shields.io/badge/Node.js-10.20%2B-white?style=for-the-badge&logo=nodedotjs&logoColor=%23ffffff&labelColor=%23141414&color=%23339933)
 ![MySQL Server Badge](https://img.shields.io/badge/MYSql%20server-8.0.35-blue?style=for-the-badge&logo=mysql&logoColor=white&labelColor=%23141414&color=%234479A1)
-![Discord.js Badge](https://img.shields.io/badge/discord.js-14.14.1-blue?style=for-the-badge&logo=discord&logoColor=white&labelColor=%23141414&color=%235865F2)
 ![npm package Badge](https://img.shields.io/badge/npm%20package-10.2.3-red?style=for-the-badge&logo=npm&logoColor=white&labelColor=%23141414&color=%23CB3837)
 ![MIT License Badge](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&labelColor=%23141414)
 
 ## 🥛 Overview
-moosic leverages the power of Discord.js to stream music from various sources, such as YouTube, to be played in a Discord voice channel. moosic offers users the ability to play, disconnect the bot, and view the queue. Developed by Andrew Kwok.
+moosic leverages Discord's API to integrate an interactive music player into a Discord channel. moosic offers users music player functionality, as well as built-in search functionality and the ability to save playlists in a MySQL database.
 
 ## ✨ Features
 - Fully functioning Discord music bot with media player commands and queue functionality
