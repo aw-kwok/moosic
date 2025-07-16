@@ -71,8 +71,3 @@ moosic leverages Discord's API to integrate an interactive music player into a D
 - prism-media 1.3.5
 - sequelize 6.5.32
 - youtube-ext 1.1.16
-
-## 📝 To-Do List
-- Improve embeds
-- Add `/clear` functionality to clear the queue
-- Add `/queueinfo` to query a saved queue from the database and display info
